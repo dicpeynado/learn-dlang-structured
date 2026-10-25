@@ -26,7 +26,7 @@ void main() {
 
 	char guess;					// a variable to store player's guess
 	int lettersGuessed = 0; 			// we need to know how many letters were guessed
-	while(!gameOver) {
+	while(!gameOver && displayWord != word && lives >= 0) {
 		printWord(displayWord);
 
 		write("Your guess, please (", lives, " lives): ");
@@ -43,21 +43,15 @@ void main() {
 		if(temp == lettersGuessed) { 		// if player didn't guess correctly, lives = lives - 1
 			lives--;
 		}
-
-		if(displayWord == word) { 		// if player guessed everything correctly, he won
-			writeln();
+	}
+	// when the game is over:
+	writeln();
+	if(displayWord == word) { 		// if player guessed everything correctly, he won
 			writeln("You won!");
-
-			break;
-		} else if(lives < 0) { 			// if player has no more lives left, he lost the game, and we print the selected word
-			writeln();
+	} else if(lives < 0) { 			// if player has no more lives left, he lost the game, and we print the selected word
 			writeln("You lost!");
 			writeln("You had to guess: ", word);
-			break;
-		}
 	}
-
-	// when the game is over:
 	writeln("Thank you for playing!");
 }
 
@@ -68,11 +62,7 @@ bool mainMenu() {
 	write(":_");
 
 	string line = strip(readln());
-	if(line == "play" || line == "Play" || line == "1" || line == "p") { // if line = to either of these, then play, else, quit
-		return false;
-	}
-
-	return true;
+	return !(line == "play" || line == "Play" || line == "1" || line == "p");
 }
 
 void printWord(char[] word) {

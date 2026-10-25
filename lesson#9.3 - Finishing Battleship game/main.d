@@ -129,36 +129,32 @@ void gamePlay(ref GameState gameState) {
 		int iy = to!int(y - '0');
 		
 		clear(); // clearing the screen by inserting new lines
-		// if (x, y) coordinates are greater than the length of the map or negative, go to the begining
-		if(ix < 0 || ix > territory.length-1 || iy < 0 || iy > territory.length-1) {
-			continue;
-		}
 
-		// if the coordinate isn't empty, go to the begining
-		if(territory[ix][iy] != ' ') {
-			continue;
-		}
+		// (x, y) coordinates within the length of the map and positive
+		//non-empty coordinate
+		if (ix >= 0 && ix < territory.length && iy >= 0 && iy < territory.length && territory[ix][iy] == ' ') {
 
-		// if player hit enemy's ship, mark it with 'x', otherwise mark it with'o'
-		if(enemyMap[ix][iy] == '1') {
-			territory[ix][iy] = enemyMap[ix][iy] = 'x';
-			player_ships_destroyed++;
-		} else {
-			territory[ix][iy] = enemyMap[ix][iy] = 'o';
-		}
-
-		// if player destroyed all of the enemy's ships, exit
-		if(player_ships_destroyed >= NUM_SHIPS) {
-			gameState = GameState.EXIT;
-			gameWon = true; 			// the player has won
-		}
-
-		enemyAttack(playerMap, enemy_ships_destroyed);
-
-		// if enemy destroyed all of the player's ships, exit
-		if(enemy_ships_destroyed >= NUM_SHIPS) {
-			gameState = GameState.EXIT;
-			gameWon = false; 			// the player has lost
+			// if player hit enemy's ship, mark it with 'x', otherwise mark it with'o'
+			if(enemyMap[ix][iy] == '1') {
+				territory[ix][iy] = enemyMap[ix][iy] = 'x';
+				player_ships_destroyed++;
+			} else {
+				territory[ix][iy] = enemyMap[ix][iy] = 'o';
+			}
+	
+			// if player destroyed all of the enemy's ships, exit
+			if(player_ships_destroyed >= NUM_SHIPS) {
+				gameState = GameState.EXIT;
+				gameWon = true; 			// the player has won
+			}
+	
+			enemyAttack(playerMap, enemy_ships_destroyed);
+	
+			// if enemy destroyed all of the player's ships, exit
+			if(enemy_ships_destroyed >= NUM_SHIPS) {
+				gameState = GameState.EXIT;
+				gameWon = false; 			// the player has lost
+			}
 		}
 	}
 
@@ -190,20 +186,15 @@ void initShipPos(ref char[5][5] array) {
 		
 		clear();
 		
-		if(ix < 0 || ix > array.length-1 || iy < 0 || iy > array.length-1) {
+		if (ix < 0 || ix > array.length-1 || iy < 0 || iy > array.length-1) {
 			writeln("\nERROR! TRY AGAIN!");
-			continue;
-		}
-
-		if(array[ix][iy] != ' ') {
+		} else if (array[ix][iy] != ' ') {
 			writeln("\nERROR! SHIP (", ix, ", ", iy, ") ALREADY EXISTS!");
 			writeln("TRY AGAIN!\n");
-			continue;
+		} else {
+			array[ix][iy] = '1';
+			i++;
 		}
-
-		array[ix][iy] = '1';
-
-		i++;
 	}
 }
 
@@ -213,35 +204,27 @@ void initEnemyShipPos(ref char[5][5] array) {
 	while(i < NUM_SHIPS) {
 		int x = uniform(0, array.length.to!int);
 		int y = uniform(0, array.length.to!int);
-
-		if(array[x][y] != ' ') {
-			continue;
+		if(array[x][y] == ' ') {
+			array[x][y] = '1';
+			i++;
 		}
-
-		array[x][y] = '1';
-		i++;
 	}
 }
 
 void enemyAttack(ref char[5][5] array, ref int ships_destroyed) {
-	while(true) {
-		int x = uniform(0, array.length.to!int);
-		int y = uniform(0, array.length.to!int);
-
-		// if enemy has already attacked this position, go to the beginig of the loop
-		if(array[x][y] == 'x' || array[x][y] == 'o') {
-			continue;
-		}
-
-		// if ship is found, destroy the ship
-		if(array[x][y] == '1') {
-			array[x][y] = 'x';
-			ships_destroyed++;
-		} else {
-			array[x][y] = 'o'; // otherwise, mark it with 'o'
-		}
-
-		break;
+	int x = uniform(0, array.length.to!int);
+	int y = uniform(0, array.length.to!int);
+	while (array[x][y] == 'x' || array[x][y] == 'o') {
+		x = uniform(0, array.length.to!int);
+		y = uniform(0, array.length.to!int);
+	}
+	// x and y are positions that have not been attacked before
+	// if ship is found, destroy the ship
+	if(array[x][y] == '1') {
+		array[x][y] = 'x';
+		ships_destroyed++;
+	} else {
+		array[x][y] = 'o'; // otherwise, mark it with 'o'
 	}
 }
 

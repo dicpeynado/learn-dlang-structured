@@ -80,11 +80,8 @@ bool mainMenu() {
 	write(":_");
 
 	string line = strip(readln());
-	if(line == "play" || line == "Play" || line == "1" || line == "p") { // if line = to either of these, then play, else, quit
-		return false;
-	}
-
-	return true;
+	// if line = to either of these, then play, else, quit
+	return !(line == "play" || line == "Play" || line == "1" || line == "p");
 }
 
 // drawing the Tic Tac Toe game board

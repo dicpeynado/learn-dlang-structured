@@ -23,30 +23,13 @@ void main() {
 		}
 	*/
 
-	/*
-	bool unknownOperation = true;
-	while(unknownOperation) {
+	readf(" %s", operation);
+	while(!(operation == '+' || operation == '-' || 
+			operation == '*' || operation == '/')) {
+		write("Error! Unknown operation. Try again: ");
 		readf(" %s", operation);
-
-		if(operation == '+' || operation == '-' || 
-			operation == '*' || operation == '/') {
-			unknownOperation = false;
-		} else {
-			write("Error! Unknown operation. Try again: ");
-		}
 	}
-	*/
-
-	while(true) {
-		readf(" %s", operation);
-
-		if(operation == '+' || operation == '-' || 
-			operation == '*' || operation == '/') {
-			break;
-		} else {
-			write("Error! Unknown operation. Try again: ");
-		}
-	}
+	// valid operation
 
 	float result = 0;
 	if(operation == '+') {
